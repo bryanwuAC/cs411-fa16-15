@@ -61,7 +61,7 @@
                 <form name="search" class="css-form" novalidate>
                 Username: <input type="text" ng-model="user.name" ng-name="username" required/>
                 <br/>
-                Password: <input type="password" ng-model="user.password1" ng-name="password" required/>
+                Password: <input type="password" ng-model="user.password" ng-name="password" required/>
                 <br/>
                 Reenter Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
                 </form>
@@ -97,7 +97,7 @@
         $scope.user={};
         
         $scope.signup_try=function(){
-            if($scope.user.password1.valueOf() != $scope.user.password2.valueOf()){
+            if($scope.user.password.valueOf() != $scope.user.password2.valueOf()){
                 alert("password not match")
                 return;
             }
