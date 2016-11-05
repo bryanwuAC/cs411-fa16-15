@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <html lang="en">
 
 <head>
@@ -24,6 +25,7 @@
 
     <!-- Theme CSS -->
     <link href="css/creative.min.css" rel="stylesheet">
+    <link href="css/creative.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -50,16 +52,13 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="#about">Project Description</a>
-                    </li>
-                    <li>
                         <a class="page-scroll" href="user_login.html">Log in</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="user_signup.html">Sign up</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact">About us</a>
+                        <a class="page-scroll" href="#about">Project Description</a>
                     </li>
                 </ul>
             </div>
@@ -76,7 +75,6 @@
                 <p>
                 <form name="search" class="css-form" novalidate>
                 <input type="text" ng-model="search.search_text" ng-name="content" required/>
-                <input type="button" ng-click="get_result()" value="CITA Search"/>
                 <br/>
                 Search option:
                 <input type="radio" ng-model="search.search_option" value="1" name="search_option_radio"/> Search Professor
@@ -108,6 +106,26 @@
                     <p class="text-faded">CITA (Cloud Intelligent Thesis Assistant) is a search engine of papers in computer science areas. Users can search related author and paper that they are interested in, and they will get recommendation based on their bookmark and browse history.</p>
                 </div>
             </div>
+
+                <div class="row" id="dev-info">
+                    <div class="col-lg-8 col-lg-offset-2 text-center" name="dev-info">
+                        <h2 class="section-heading">Developer information</h2>
+                        <hr class="light">
+                        <p class="text-faded">This is a CS 411 project in Fall 2016.
+                        <br/><br/>Developers:</p>
+                    </div>
+
+                    <div class="col-lg-4 col-lg-offset-2 text-center text-faded">
+                        <p>Yun Wu <br/> Yuncheng Wu <br/> Tianyu Chen <br/> Siyang Liu<br/></p>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <p><a class="text-faded" href="mailto:your-email@your-domain.com">yunwu3@illinois.edu <br/> </a>
+                            <a class="text-faded" href="mailto:your-email@your-domain.com"> ywu101@illinois.edu <br/></a>
+                            <a class="text-faded" href="mailto:your-email@your-domain.com"> tchen72@illinois.edu <br/></a>
+                            <a class="text-faded" href="mailto:your-email@your-domain.com"> sliu134@illinois.edu <br/></a>
+                        </p>
+                    </div>
+            </div>
         </div>
     </section>
 
@@ -125,27 +143,27 @@
         
 <!--     </section> -->
 
-    <section id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Developer information</h2>
-                    <hr class="primary">
-                    <p>This is a CS 411 project in Fall 2016.
-                    <br/><br/>Developers:</p>
-                </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
-                    <p>Yun Wu <br/> Yuncheng Wu <br/> Tianyu Chen <br/> Siyang Liu<br/></p>
-                </div>
-                <div class="col-lg-4 text-center">
-                    <p><a href="mailto:your-email@your-domain.com">yunwu3@illinois.edu <br/> </a>
-                        <a href="mailto:your-email@your-domain.com"> ywu101@illinois.edu <br/></a>
-                        <a href="mailto:your-email@your-domain.com"> tchen72@illinois.edu <br/></a>
-                        <a href="mailto:your-email@your-domain.com"> sliu134@illinois.edu <br/></a></p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!--<section id="contact">-->
+        <!--<div class="container">-->
+            <!--<div class="row">-->
+                <!--<div class="col-lg-8 col-lg-offset-2 text-center">-->
+                    <!--<h2 class="section-heading">Developer information</h2>-->
+                    <!--<hr class="primary">-->
+                    <!--<p>This is a CS 411 project in Fall 2016.-->
+                    <!--<br/><br/>Developers:</p>-->
+                <!--</div>-->
+                <!--<div class="col-lg-4 col-lg-offset-2 text-center">-->
+                    <!--<p>Yun Wu <br/> Yuncheng Wu <br/> Tianyu Chen <br/> Siyang Liu<br/></p>-->
+                <!--</div>-->
+                <!--<div class="col-lg-4 text-center">-->
+                    <!--<p><a href="mailto:your-email@your-domain.com">yunwu3@illinois.edu <br/> </a>-->
+                        <!--<a href="mailto:your-email@your-domain.com"> ywu101@illinois.edu <br/></a>-->
+                        <!--<a href="mailto:your-email@your-domain.com"> tchen72@illinois.edu <br/></a>-->
+                        <!--<a href="mailto:your-email@your-domain.com"> sliu134@illinois.edu <br/></a></p>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</section>-->
 
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -177,10 +195,7 @@
             "keyword_option": "1",
             "search_text": ""
         };
-  
-        $scope.user_signup = function() {
-            $location.url('http://test.com/login.jsp?un='+ $scope.form.username +'&pw="+ $scope.form.password);
-        };      
+
         $scope.get_result=function(){
              $http.put('http://localhost:8000/data/get', $scope.search).then(
             //search success

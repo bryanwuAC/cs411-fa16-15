@@ -23,11 +23,11 @@ a {
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
   transition: all 0.35s;
-  color: #F05F40;
+  /*color: #F05F40;*/
 }
 a:hover,
 a:focus {
-  color: #eb3812;
+  color: #23417e;
 }
 h1,
 h2,
@@ -53,7 +53,7 @@ p {
   color: rgba(255, 255, 255, 0.7);
 }
 section {
-  padding: 100px 0;
+  padding: 70px 0;
 }
 aside {
   padding: 50px 0;
@@ -413,4 +413,12 @@ img::-moz-selection {
 }
 body {
   webkit-tap-highlight-color: #222222;
+}
+
+.row{
+  padding:30px;
+}
+
+#dev-info{
+  padding-bottom: 10px;
 }
