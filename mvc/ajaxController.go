@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	//"io/ioutil"
+	// "io/ioutil"
 	//"bufio"
     //"os"
     //"fmt"
@@ -14,6 +14,11 @@ import (
     "github.com/ziutek/mymysql/mysql"
     _ "github.com/ziutek/mymysql/thrsafe"
 )
+
+type user struct {
+	Name  string
+	Password string
+}
 
 type Admin struct{
 	Name string   `json:"username"`
@@ -51,25 +56,34 @@ log.Println("In ajaxController getting logging")
 	}
 	defer db.Close()
 
+
+	log.Println("body is",r.Body)
+	var U user
+	err := json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("error:", err)
+	}
+
+	log.Println(U)
 	var admin_name string
 	var admin_password string
 
-	log.Println("57")
+	admin_name = U.Name
+	admin_password = U.Password
+
+	log.Println("admin_name is:", admin_name, "admin_password is:",admin_password)
+
 	//if r.Method == "POST"{ 
-		admin_name = r.FormValue("name")
-		admin_password = r.FormValue("password")
-	log.Println("61")
-	//}else{
-	//	admin_name = r.Form["user.name"][0]
-	//	admin_password = r.Form["user.password"][0]
-	//}
+	//admin_name = r.FormValue("name")
+	//admin_password = r.FormValue("password")
+
 	
 	if admin_name == "" || admin_password == "" {
 		OutputJson(w, 0, "帐号或密码不能回空", nil)
 		return
 	}
 
-	log.Println("admin_name is:", admin_name, "admin_password is:",admin_password)
 
 }
 
