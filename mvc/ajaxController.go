@@ -38,14 +38,12 @@ type Result struct {
 type ajaxController struct {
 }
 
+func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request) {
+
+}
 func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) {
 log.Println("In ajaxController getting logging")
 	w.Header().Set("content-type", "application/json")
-	// err := r.ParseForm()
-	// if err != nil {
-	// 	OutputJson(w, 0, "参数错误", nil)
-	// 	return
-	// }	
 
 	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
  	err := db.Connect()

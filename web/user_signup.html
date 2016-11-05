@@ -66,7 +66,7 @@
                 Reenter Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
                 </form>
                 <p/>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Sign up</a>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="signup_try()" value="Log in"/>
             </div>
         </div>
     </header>
@@ -90,18 +90,18 @@
 </html>
 
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script>
     var app=angular.module("user_signup", []);
     app.controller('signup_Ctrl', function($http, $scope){
         $scope.user={};
         
         $scope.signup_try=function(){
-            if(！user.password1.equals(user.password2)){
-                alert("Your password does not match");
+            if(user.password1.equals(user.password2)){
+                console.log("password not match")
                 return;
             }
-            $http.put('http://localhost:8000/data/get', $scope.user).then(
+            $http.put('/ajax/signup', $scope.user).then(
             function(response){
               if (response.data.result == 'success'){
                   console.log(response.data);
