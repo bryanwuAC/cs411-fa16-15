@@ -58,13 +58,14 @@
                 <h1 id="homeHeading">Welcome back</h1>
                 <hr>
                 <p>
-                <form name="search" class="css-form" novalidate>
-                Username: <input type="text" ng-model="user.name" ng-name="username" required/>
-                <br/>
-                Password: <input type="password" ng-model="user.password" ng-name="password" required/>
+                <form data-type="formAction" name="search" class="css-form" >
+                    Username: <input type="text" ng-model="user.name" ng-name="username" required/>
+                    <br/>
+                    Password: <input type="password" ng-model="user.password" ng-name="password" required/>
                 </form>
                 <p/>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Log in</a>
+               <!--  <a href="#tobedone" ng-click="login_try()" class="btn btn-primary btn-xl page-scroll" >Log in</a> -->
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="login_try()" value="Log in"/>
             </div>
         </div>
     </header>
@@ -88,14 +89,14 @@
 </html>
 
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script>
     var app=angular.module("user_login", []);
     app.controller('loginCtrl', function($http, $scope){
         $scope.user={};
-        
         $scope.login_try=function(){
-             $http.put('http://localhost:8000/data/get', $scope.user).then(
+              console.log("in funtion");
+             $http.put('/ajax/login', $scope.user).then(
             function(response){
               if (response.data.result == 'success'){
                   console.log(response.data);
