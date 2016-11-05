@@ -81,6 +81,7 @@
                 <input type="radio" ng-model="search.search_option" value="2" name="search_option_radio"/> Search paper
                 <br/>
                 Keyword settings:
+<!--                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>-->
                     <select ng-show="search.search_option==1" ng-model="search.keyword_option">
                         <option value="1"/>Professor name
                         <option value="2"/>Focus area
