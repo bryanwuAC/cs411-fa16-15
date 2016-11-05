@@ -185,11 +185,11 @@ public class Parser {
 			System.out.println("Error in XML parser configuration: " + e.getMessage());
 		}
 		System.out.println("Number of Persons : " + Person.numberOfPersons());
-		nameLengthStatistics();
+//		nameLengthStatistics();
 		System.out.println("Number of Publications with authors/editors: " + Publication.getNumberOfPublications());
 		System.out
 				.println("Maximum number of authors/editors in a publication: " + Publication.getMaxNumberOfAuthors());
-		publicationCountStatistics();
+//		publicationCountStatistics();
 		Person.enterPublications();
 	}
 
@@ -230,7 +230,10 @@ public class Parser {
 			System.exit(0);
 		}
 		new Parser(args[0]);
-		printCSV();
+		System.out.println("Max Title Length : " + Publication.getMaxTitleLength());
+		System.out.println("Max URL Length : " + Publication.getMaxUrlLength());
+		System.out.println("Max Key Length : " + Publication.getMaxKeyLength());
+
 	}
 
 }

@@ -15,6 +15,8 @@ public class Publication {
     private static Set ps= new HashSet(650000);
     private static int maxNumberOfAuthors = 0;
     private static int maxTitleLength = 0;
+    private static int maxKeyLength = 0;
+    private static int maxUrlLength = 0;
     private String key;
     private Person[] authors;	// or editors
 	private String title;
@@ -31,6 +33,12 @@ public class Publication {
         ps.add(this);
         if (persons.length > maxNumberOfAuthors)
             maxNumberOfAuthors = persons.length;
+        if (title.length() > maxTitleLength)
+        	maxTitleLength = title.length();
+        if (key.length() > maxKeyLength)
+        	maxKeyLength = key.length();
+        if (url.length() > maxUrlLength)
+        	maxUrlLength = url.length();
     }
     
     public static int getNumberOfPublications() {
@@ -39,6 +47,18 @@ public class Publication {
     
     public static int getMaxNumberOfAuthors() {
         return maxNumberOfAuthors;
+    }
+    
+    public static int getMaxTitleLength(){
+    	return maxTitleLength;
+    }
+    
+    public static int getMaxUrlLength(){
+    	return maxUrlLength;
+    }
+    
+    public static int getMaxKeyLength(){
+    	return maxKeyLength;
     }
     
     public Person[] getAuthors() {
