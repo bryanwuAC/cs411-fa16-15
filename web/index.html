@@ -53,7 +53,10 @@
                         <a class="page-scroll" href="#about">Project Description</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Log in/Sign up</a>
+                        <a class="page-scroll" href="user_login.html">Log in</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="user_signup.html">Sign up</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">About us</a>
@@ -115,7 +118,7 @@
                     <h2 class="section-heading">Sign up to get personal recommendations</h2>
                     <hr class="primary">
                     <input type="button" ng-click="get_result()" value="Log in"/>
-                    <input type="button" ng-click="get_result()" value="Sign up"/>
+                    <input type="button" ng-click="user_signup()" value="Sign up"/>
                 </div>
             </div>
         </div>
@@ -174,7 +177,10 @@
             "keyword_option": "1",
             "search_text": ""
         };
-        
+  
+        $scope.user_signup = function() {
+            $location.url('http://test.com/login.jsp?un='+ $scope.form.username +'&pw="+ $scope.form.password);
+        };      
         $scope.get_result=function(){
              $http.put('http://localhost:8000/data/get', $scope.search).then(
             //search success
