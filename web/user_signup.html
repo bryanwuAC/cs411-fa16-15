@@ -97,8 +97,8 @@
         $scope.user={};
         
         $scope.signup_try=function(){
-            if(user.password1.equals(user.password2)){
-                console.log("password not match")
+            if($scope.user.password1.valueOf() != $scope.user.password2.valueOf()){
+                alert("password not match")
                 return;
             }
             $http.put('/ajax/signup', $scope.user).then(

@@ -94,6 +94,7 @@
     var app=angular.module("user_login", []);
     app.controller('loginCtrl', function($http, $scope){
         $scope.user={};
+        
         $scope.login_try=function(){
               console.log("in funtion");
              $http.put('/ajax/login', $scope.user).then(
