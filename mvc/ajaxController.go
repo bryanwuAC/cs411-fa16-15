@@ -59,7 +59,7 @@ log.Println("In ajaxController getting logging")
 
 	log.Println("body is",r.Body)
 	var U user
-	err := json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
 		log.Println("error:", err)
@@ -73,17 +73,35 @@ log.Println("In ajaxController getting logging")
 	admin_password = U.Password
 
 	log.Println("admin_name is:", admin_name, "admin_password is:",admin_password)
-
-	//if r.Method == "POST"{ 
-	//admin_name = r.FormValue("name")
-	//admin_password = r.FormValue("password")
-
 	
 	if admin_name == "" || admin_password == "" {
 		OutputJson(w, 0, "帐号或密码不能回空", nil)
 		return
 	}
 
+	message := ""
+	rows, res, err := db.Query("select * from Users where name = '%s'", admin_name)
+	if err != nil {
+		log.Println(err)
+		message = "Query failed"
+	}
+	if rows == nil {
+		message = "找不到用户："+admin_name
+	}
+
+	name := res.Map("password")	//returns the index of column :"admin_password"
+	admin_password_db := rows[0].Str(name)
+
+	Flag := true
+	if admin_password_db != admin_password {
+		Flag = false
+	}
+
+	if Flag == false{
+		OutputJson(w, 0, message, nil)
+	}else{
+		OutputJson(w, 1, message, nil)
+	}
 
 }
 
