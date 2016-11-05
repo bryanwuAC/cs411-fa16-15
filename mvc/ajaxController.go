@@ -39,7 +39,42 @@ type ajaxController struct {
 }
 
 func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
 
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "数据库连接失败", nil)
+		return
+	}
+	defer db.Close()
+
+	log.Println("body is",r.Body)
+	var U user
+	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("error:", err)
+	}
+
+	log.Println(U)
+	var admin_name string
+	var admin_password string
+
+	admin_name = U.Name
+	admin_password = U.Password
+
+	_, _, err = db.Query("INSERT INTO Users VALUES ('%s','%s')", admin_name, admin_password)
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "数据库操作失败", nil)
+		return
+	}
+
+	OutputJson(w, 1, "操作成功", nil)
+	log.Println("out ajaxController")
+	return
 }
 func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) {
 log.Println("In ajaxController getting logging")
