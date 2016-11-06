@@ -82,18 +82,18 @@
                 <br/>
                 Keyword settings:
 <!--                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>-->
-                    <select ng-show="search.search_option==1" ng-model="search.keyword_option">
-                        <option value="1"/>Professor name
-                        <option value="2"/>Focus area
-                    </select>
-                    <select ng-show="search.search_option==2" ng-model="search.keyword_option">
-                        <option value="1"/>Title
-                        <option value="2"/>Area
-                    </select>
+                <select ng-show="search.search_option==1" ng-model="search.keyword_option">
+                    <option value="1"/>Professor name
+                    <option value="2"/>Focus area
+                </select>
+                <select ng-show="search.search_option==2" ng-model="search.keyword_option">
+                    <option value="1"/>Title
+                    <option value="2"/>Area
+                </select>
                 <br/>
                 </form>
                 <p/>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">CITA Search</a>
+                <input class="btn btn-primary btn-xl page-scroll" ng-click="get_result()" value="CITA Search" >
             </div>
         </div>
     </header>
@@ -198,7 +198,7 @@
         };
 
         $scope.get_result=function(){
-             $http.put('http://localhost:8000/data/get', $scope.search).then(
+             $http.put('ajax/search', $scope.search).then(
             //search success
             function(response){
               if (response.data.result == 'success'){

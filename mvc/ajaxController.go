@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	// "io/ioutil"
+	"io/ioutil"
 	//"bufio"
     //"os"
     //"fmt"
@@ -20,12 +20,18 @@ type user struct {
 	Password string
 }
 
-type Admin struct{
-	Name string   `json:"username"`
+type search struct {
+	Search_text  string
+	Search_option string
+	Keyword_option string
 }
 
-type AdminSlice struct{
-	Admin_array []Admin
+type Paper struct{
+	Title string   
+}
+
+type PaperSlice struct{
+	Paper_array []Paper
 }
 
 type Result struct {
@@ -41,11 +47,14 @@ type ajaxController struct {
 func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
+	// body, _ := ioutil.ReadAll(r.Body)
+	// log.Println(string(body))
+
 	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
  	err := db.Connect()
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "数据库连接失败", nil)
+		OutputJson(w, 0, "failed to connect to", nil)
 		return
 	}
 	defer db.Close()
@@ -68,14 +77,15 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 	_, _, err = db.Query("INSERT INTO Users VALUES ('%s','%s')", admin_name, admin_password)
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "数据库操作失败", nil)
+		OutputJson(w, 0, "Query execution failed", nil)
 		return
 	}
 
-	OutputJson(w, 1, "操作成功", nil)
+	OutputJson(w, 1, "Sign up successful!", nil)
 	log.Println("out ajaxController")
 	return
 }
+
 func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) {
 log.Println("In ajaxController getting logging")
 	w.Header().Set("content-type", "application/json")
@@ -84,7 +94,7 @@ log.Println("In ajaxController getting logging")
  	err := db.Connect()
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "数据库连接失败", nil)
+		OutputJson(w, 0, "db connection failed", nil)
 		return
 	}
 	defer db.Close()
@@ -99,16 +109,14 @@ log.Println("In ajaxController getting logging")
 	}
 
 	log.Println(U)
-	var admin_name string
-	var admin_password string
 
-	admin_name = U.Name
-	admin_password = U.Password
+	admin_name := U.Name
+	admin_password := U.Password
 
 	log.Println("admin_name is:", admin_name, "admin_password is:",admin_password)
 	
 	if admin_name == "" || admin_password == "" {
-		OutputJson(w, 0, "帐号或密码不能回空", nil)
+		OutputJson(w, 0, "Username or Password could not be NULL", nil)
 		return
 	}
 
@@ -119,7 +127,7 @@ log.Println("In ajaxController getting logging")
 		message = "Query failed"
 	}
 	if rows == nil {
-		message = "找不到用户："+admin_name
+		message = "Can't fine user:"+admin_name
 	}
 
 	name := res.Map("password")	//returns the index of column :"admin_password"
@@ -128,6 +136,9 @@ log.Println("In ajaxController getting logging")
 	Flag := true
 	if admin_password_db != admin_password {
 		Flag = false
+		message = "Wrong password!"
+	}else{
+		message = "Success!!"
 	}
 
 	if Flag == false{
@@ -138,39 +149,56 @@ log.Println("In ajaxController getting logging")
 
 }
 
-func (this *ajaxController) GetAdminsAction(w http.ResponseWriter, r *http.Request) {
-	log.Println("In ajaxController getting admins")
+func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request) {
+	log.Println("In ajaxController Searching")
 	w.Header().Set("content-type", "application/json")
-	err := r.ParseForm()
-	if err != nil {
-		OutputJson(w, 0, "参数错误", nil)
-		return
-	}	
 
-	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
- 	err = db.Connect()
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "dblp_csv")
+ 	err := db.Connect()
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "数据库连接失败", nil)
+		OutputJson(w, 0, "failed to connect to db", nil)
 		return
 	}
 	defer db.Close()
 
-	rows, _, err := db.Query("select * from Admins")
+	body, _ := ioutil.ReadAll(r.Body)
+	log.Println(string(body))
+
+	var S search
+	err := json.NewDecoder(r.Body).Decode(&S)	// body, err := ioutil.ReadAll(r.Body)
+
 	if err != nil {
-		log.Println(err)
-		OutputJson(w, 0, "数据库操作失败", nil)
-		return
-	}else{
-		log.Println("连接成功")
+		log.Println("error:", err)
 	}
 
-	var Slice AdminSlice
+	log.Println(S)
+
+	search_text := S.Search_text
+	search_option := S.Search_option
+	keyword_option := S.Keyword_option
+
+	log.Println(search_text, search_option, keyword_option)
+
+	if search_option == 1 && keyword_option == 1{
+		rows, _, err := db.Query("select TITLE from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", Search_text)
+
+		if err != nil {
+			log.Println(err)
+			OutputJson(w, 0, "Query execution failed", nil)
+			return
+		}else{
+			log.Println("db conncted!")
+		}		
+	}
+
+	
+	var Slice PaperSlice
 
 	for _, row := range rows {
-		Admin := Admin{}
-		Admin.Name = row.Str(0)	
-		Slice.Admin_array = append(Slice.Admin_array, Admin)
+		Paper := Paper{}
+		Paper.Title = row.Str(0)	
+		Slice.Paper_array = append(Slice.Paper_array, Paper)
    	}
    	body, err := json.Marshal(Slice)
 	if err != nil {
