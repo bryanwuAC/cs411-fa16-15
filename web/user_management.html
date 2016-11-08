@@ -54,19 +54,34 @@
 
     <header>
         <div class="header-content">
-            <div class="header-content-inner" ng-app="user_signup" ng-controller="signup_Ctrl">
-                <h1 id="homeHeading">Welcome, your assistant is ready</h1>
+            <div class="header-content-inner" ng-app="user_management" ng-controller="management_Ctrl">
+                <h1 id="homeHeading">Settings and functions</h1>
                 <hr>
-                <p>
-                <form name="search" class="css-form" novalidate>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_delete_switch()" value="Delete account"/>
+                <form name="delete_account" class="css-form" ng-show="show_delete_account" novalidate>
+                Username of the account you want to delete: <input type="text" ng-model="user.name" ng-name="username" required/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
+                </form>
+                
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_password_switch()" value="Change password"/>
+                
+                <form name="update_password" class="css-form" ng-show="show_change_password" novalidate>
+                <br/>
                 Username: <input type="text" ng-model="user.name" ng-name="username" required/>
                 <br/>
-                Password: <input type="password" ng-model="user.password" ng-name="password" required/>
+                New Password: <input type="password" ng-model="user.password" ng-name="password" required/>
                 <br/>
-                Reenter Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
+                Reenter New Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
                 </form>
-                <p/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="signup_try()" value="Sign UP!"/>
+                
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_recommendation_switch()" value="Recommendation"/>
+                <div ng-show="show_recommendation">
+                    This is Recommendation palceholder.
+                </div>
             </div>
         </div>
     </header>
@@ -92,26 +107,69 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script>
-    var app=angular.module("user_signup", []);
-    app.controller('signup_Ctrl', function($http, $scope){
+    var app=angular.module("user_management", []);
+    app.controller('management_Ctrl', function($http, $scope){
         $scope.user={};
+        $scope.show_change_password=false;
+        $scope.show_recommendation=false;
+        $scope.show_delete_account=false;
         
-        $scope.signup_try=function(){
+        $scope.show_delete_switch=function(){
+            $scope.user.name="";
+            $scope.show_delete_account=!$scope.show_delete_account;
+            if($scope.show_delete_account)
+                $scope.show_recommendation=false;
+                $scope.show_change_password=false;
+        }
+        
+        $scope.show_password_switch=function(){
+            $scope.user.name="";
+            $scope.show_change_password=!$scope.show_change_password;
+            if($scope.show_change_password)
+                $scope.show_recommendation=false;
+                $scope.show_delete_account=false;
+        }
+        
+        $scope.show_recommendation_switch=function(){
+            $scope.user.name="";
+            $scope.show_recommendation=!$scope.show_recommendation;
+            if($scope.show_recommendation)
+                $scope.show_change_password=false;
+                $scope.show_delete_account=false;
+        }
+        
+        
+        $scope.update_password_try=function(){
             if($scope.user.password.valueOf() != $scope.user.password2.valueOf()){
                 alert("Password not match")
                 return;
             }
-            $http.put('/ajax/signup', $scope.user).then(
+            $http.put('/ajax/changePassword', $scope.user).then(
             function(response){
               if (response.data.result == 'success'){
                   console.log(response.data);
               }else {
-                alert("Sorry, user name has been used.");
+                alert("User does not exist!");
               }
             },
             function(){
               console.log("send failure");
             }
+            );
+        }
+        
+        $scope.delete_account_try=function(){
+            $http.put('/ajax/deleteAccount', $scope.user).then(
+                function(response){
+                    if(response.data.result == 'success'){
+                        alert("User "+$scope.user.username+" has been deleted.");
+                    }else{
+                        alert("User does not exist!");
+                    }
+                },
+                function(){
+                    console.log("send failure");
+                }
             );
         }
     
