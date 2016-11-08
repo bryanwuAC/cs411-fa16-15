@@ -103,7 +103,7 @@
             }
             $http.put('/ajax/signup', $scope.user).then(
             function(response){
-              if (response.Ret=="1"){
+              if (response.Ret.valueOf()=="1"){
                   alert(response.Reason);
               }else {
                 alert("Sorry, user name has been used.");
