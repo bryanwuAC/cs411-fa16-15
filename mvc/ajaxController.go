@@ -72,7 +72,7 @@ func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.
 	_, _, err = db.Query("UPDATE Users SET password = '%s' where name = '%s'", admin_password, admin_name)
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "Query execution failed", nil)
+		OutputJson(w, 0, "user name does not exists", nil)
 		return
 	}
 
@@ -108,7 +108,7 @@ func (this *ajaxController) DeleteAccountAction(w http.ResponseWriter, r *http.R
 	_, _, err = db.Query("DELETE FROM Users where name = '%s'", admin_name)
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "Query execution failed", nil)
+		OutputJson(w, 0, "user name does not exists", nil)
 		return
 	}
 
@@ -145,7 +145,7 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 	_, _, err = db.Query("INSERT INTO Users VALUES ('%s','%s')", admin_name, admin_password)
 	if err != nil {
 		log.Println(err)
-		OutputJson(w, 0, "User name has been used", nil)
+		OutputJson(w, 0, "User name exists", nil)
 		return
 	}
 
