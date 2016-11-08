@@ -146,8 +146,8 @@
             }
             $http.put('/ajax/changePassword', $scope.user).then(
             function(response){
-              if (response.data.result == 'success'){
-                  console.log(response.data);
+              if (response.data.Ret == '1'){
+                alert("Password has been updated.")
               }else {
                 alert("User does not exist!");
               }
@@ -161,7 +161,7 @@
         $scope.delete_account_try=function(){
             $http.put('/ajax/deleteAccount', $scope.user).then(
                 function(response){
-                    if(response.data.result == 'success'){
+                    if(response.data.Ret == '1'){
                         alert("User "+$scope.user.username+" has been deleted.");
                     }else{
                         alert("User does not exist!");
