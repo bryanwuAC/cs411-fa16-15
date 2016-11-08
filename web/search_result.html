@@ -45,25 +45,7 @@
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Cloud Intelligent Thesis Assitant</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="page-scroll" href="user_login.html">Log in</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="user_signup.html">Sign up</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="user_management.html">Account management</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#about">Project Description</a>
-                    </li>
-                </ul>
+                <a class="navbar-brand page-scroll" href="index.html"   >Back to home page</a>
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -73,9 +55,8 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner" ng-app="search_module" ng-controller="searchCtrl" ng-init="search_option=1" ng-init="keyword_option=1">
-                <h1 id="homeHeading">CITA</h1>
+                <h1 id="homeHeading">Search whatever you want</h1>
                 <hr>
-<!--
                 <p>
                 <form name="search" class="css-form" novalidate>
                 <input type="text" ng-model="search.search_text" ng-name="content" required/>
@@ -85,7 +66,7 @@
                 <input type="radio" ng-model="search_op_temp" value="2" name="search_option_radio"/> Search paper
                 <br/>
                 Keyword settings:
-                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>
+<!--                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>-->
                 <select ng-show="search_op_temp==1" ng-model="keyword_op_temp">
                     <option value="1"/>Professor name
                     <option value="2"/>Focus area
@@ -98,43 +79,12 @@
                 </form>
                 <p/>
                 <input class="btn btn-primary btn-xl page-scroll" ng-click="get_result()" value="CITA Search" >
--->
-                <a class="btn btn-primary btn-xl" href="search_result.html">Begin Search!</a>
+                <div>
+                
+                </div>
             </div>
         </div>
     </header>
-
-    <section class="bg-primary" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">About Project CITA</h2>
-                    <hr class="light">
-                    <p class="text-faded">CITA (Cloud Intelligent Thesis Assistant) is a search engine of papers in computer science areas. Users can search related author and paper that they are interested in, and they will get recommendation based on their bookmark and browse history.</p>
-                </div>
-            </div>
-
-                <div class="row" id="dev-info">
-                    <div class="col-lg-8 col-lg-offset-2 text-center" name="dev-info">
-                        <h2 class="section-heading">Developer information</h2>
-                        <hr class="light">
-                        <p class="text-faded">This is a CS 411 project in Fall 2016.
-                        <br/><br/>Developers:</p>
-                    </div>
-
-                    <div class="col-lg-4 col-lg-offset-2 text-center text-faded">
-                        <p>Yun Wu <br/> Yuncheng Wu <br/> Tianyu Chen <br/> Siyang Liu<br/></p>
-                    </div>
-                    <div class="col-lg-4 text-center">
-                        <p><a class="text-faded" href="mailto:your-email@your-domain.com">yunwu3@illinois.edu <br/> </a>
-                            <a class="text-faded" href="mailto:your-email@your-domain.com"> ywu101@illinois.edu <br/></a>
-                            <a class="text-faded" href="mailto:your-email@your-domain.com"> tchen72@illinois.edu <br/></a>
-                            <a class="text-faded" href="mailto:your-email@your-domain.com"> sliu134@illinois.edu <br/></a>
-                        </p>
-                    </div>
-            </div>
-        </div>
-    </section>
 
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -176,11 +126,12 @@
              $http.put('ajax/search', $scope.search).then(
             //search success
             function(response){
-              if (response.data.result == 'success'){
-                  console.log(response.data);
-              }else {
-                alert(response.data.reason);
-              }
+//              if (response.data == '1'){
+//                  console.log(response.data);
+//              }else {
+//                alert(response.data.reason);
+//              }
+                console.log(response);
             },
             //search fail
             function(){
