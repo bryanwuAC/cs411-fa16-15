@@ -45,12 +45,79 @@ type Result struct {
 
 type ajaxController struct {
 }
-
-func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request) {
+func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
-	// body, _ := ioutil.ReadAll(r.Body)
-	// log.Println(string(body))
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "failed to connect to", nil)
+		return
+	}
+
+	defer db.Close()
+	log.Println("body is",r.Body)
+	var U user
+	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("error:", err)
+	}
+
+	admin_name := U.Name
+	admin_password := U.Password
+
+	_, _, err = db.Query("UPDATE Users SET password = '%s' where name = '%s'", admin_password, admin_name)
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "Query execution failed", nil)
+		return
+	}
+
+	OutputJson(w, 1, "Update successful!", nil)
+	log.Println("out ajaxController")
+	return
+}
+
+
+func (this *ajaxController) DeleteAccountAction(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "failed to connect to", nil)
+		return
+	}
+
+	defer db.Close()
+	log.Println("body is",r.Body)
+	var U user
+	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Println("error:", err)
+	}
+
+	log.Println(U)
+	admin_name := U.Name
+
+	_, _, err = db.Query("DELETE FROM Users where name = '%s'", admin_name)
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "Query execution failed", nil)
+		return
+	}
+
+	OutputJson(w, 1, "Delete successful!", nil)
+	log.Println("out ajaxController")
+	return
+
+}
+func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
 
 	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
  	err := db.Connect()
@@ -70,11 +137,9 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 	}
 
 	log.Println(U)
-	var admin_name string
-	var admin_password string
 
-	admin_name = U.Name
-	admin_password = U.Password
+	admin_name := U.Name
+	admin_password := U.Password
 
 	_, _, err = db.Query("INSERT INTO Users VALUES ('%s','%s')", admin_name, admin_password)
 	if err != nil {
