@@ -25,11 +25,8 @@ type search struct {
 	Search_option string
 	Keyword_option string
 	Search_text string
-	// search_option_radio 
 }
-// type search_option_radio struct{
-// 	Search_text string
-// }
+
 
 type Paper struct{
 	Title string   
@@ -158,14 +155,14 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 	log.Println("In ajaxController Searching")
 	w.Header().Set("content-type", "application/json")
 
-	// db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "dblp_csv")
- // 	err := db.Connect()
-	// if err != nil {
-	// 	log.Println(err)
-	// 	OutputJson(w, 0, "failed to connect to db", nil)
-	// 	return
-	// }
-	// defer db.Close()
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "dblp_csv")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "failed to connect to db", nil)
+		return
+	}
+	defer db.Close()
 
 	body, _ := ioutil.ReadAll(r.Body)
 	log.Println(string(body))
@@ -185,33 +182,34 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 
 	log.Println(search_text, search_option, keyword_option)
 
-	// if strconv.Atoi(search_option) == 1 && strconv.Atoi(keyword_option) == 1{
-	// 	rows, _, err := db.Query("select TITLE from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", Search_text)
+	var Slice PaperSlice
 
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 		OutputJson(w, 0, "Query execution failed", nil)
-	// 		return
-	// 	}else{
-	// 		log.Println("db conncted!")
-	// 	}		
-	// }
+	if search_option == "1" && keyword_option == "1"{
+		rows, _, err := db.Query("select TITLE from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
 
-	
-	// var Slice PaperSlice
+		if err != nil {
+			log.Println(err)
+			OutputJson(w, 0, "Query execution failed", nil)
+			return
+		}else{
+			log.Println("db conncted!")
+		}	
 
-	// for _, row := range rows {
-	// 	Paper := Paper{}
-	// 	Paper.Title = row.Str(0)	
-	// 	Slice.Paper_array = append(Slice.Paper_array, Paper)
- //   	}
- //   	body, err := json.Marshal(Slice)
-	// if err != nil {
-	//     panic(err.Error())
-	//     return
-	// }
-	// w.Write(body)
-	// return
+		for _, row := range rows {
+			Paper := Paper{}
+			Paper.Title = row.Str(0)	
+			Slice.Paper_array = append(Slice.Paper_array, Paper)
+   		}	
+	}
+
+
+   	body, err = json.Marshal(Slice)
+	if err != nil {
+	    panic(err.Error())
+	    return
+	}
+	w.Write(body)
+	return
 
 }
 
