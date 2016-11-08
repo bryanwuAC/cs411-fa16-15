@@ -58,9 +58,7 @@ func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.
 
 	defer db.Close()
 
-	body, _ := ioutil.ReadAll(r.Body)
-	log.Println("body is", string(body))
-
+	log.Println("body is",r.Body)
 	var U user
 	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
 
@@ -96,10 +94,7 @@ func (this *ajaxController) DeleteAccountAction(w http.ResponseWriter, r *http.R
 	}
 
 	defer db.Close()
-
-	body, _ := ioutil.ReadAll(r.Body)
-	log.Println("body is", string(body))
-
+	log.Println("body is",r.Body)
 	var U user
 	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
 
@@ -134,9 +129,7 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 	}
 	defer db.Close()
 
-	body, _ := ioutil.ReadAll(r.Body)
-	log.Println("body is", string(body))
-
+	log.Println("body is",r.Body)
 	var U user
 	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
 
@@ -174,9 +167,8 @@ log.Println("In ajaxController getting logging")
 	}
 	defer db.Close()
 
-	body, _ := ioutil.ReadAll(r.Body)
-	log.Println("body is", string(body))
 
+	log.Println("body is",r.Body)
 	var U user
 	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
 
