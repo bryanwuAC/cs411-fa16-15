@@ -80,16 +80,16 @@
                 <input type="text" ng-model="search.search_text" ng-name="content" required/>
                 <br/>
                 Search option:
-                <input type="radio" ng-model="search.search_option" value="1" name="search_option_radio"/> Search Professor
-                <input type="radio" ng-model="search.search_option" value="2" name="search_option_radio"/> Search paper
+                <input type="radio" ng-model="search_op_temp" value="1" name="search_option_radio"/> Search Professor
+                <input type="radio" ng-model="search_op_temp" value="2" name="search_option_radio"/> Search paper
                 <br/>
                 Keyword settings:
 <!--                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>-->
-                <select ng-show="search.search_option==1" ng-model="search.keyword_option">
+                <select ng-show="search_op_temp==1" ng-model="keyword_op_temp">
                     <option value="1"/>Professor name
                     <option value="2"/>Focus area
                 </select>
-                <select ng-show="search.search_option==2" ng-model="search.keyword_option">
+                <select ng-show="search_op_temp==2" ng-model="keyword_op_temp">
                     <option value="1"/>Title
                     <option value="2"/>Area
                 </select>
@@ -192,6 +192,9 @@
 <script>
     var app=angular.module("search_module", []);
     app.controller('searchCtrl', function($http, $scope){
+        $scope.search_op_temp="1";
+        $scope.keyword_op_temp="1";
+        
         $scope.search={
             //1 means search professor, 2 means search paper
             "search_option": "1",
@@ -201,6 +204,8 @@
         };
 
         $scope.get_result=function(){
+            $scope.search.search_option=$scope.search_op_temp;
+            $scope.search.keyword_option=$scope.keyword_op_temp;
              $http.put('ajax/search', $scope.search).then(
             //search success
             function(response){
