@@ -81,6 +81,18 @@
                 <input class="btn btn-primary btn-xl page-scroll" ng-click="get_result()" value="CITA Search" >
                 <div>
                 
+                <div ng-controller="searchCtrl">
+                  Find {{result.length}} items.
+                  <ul class="example-animate-container">
+                    <li class="animate-repeat" ng-repeat="paper in result">
+                      [{{$index + 1}}] {{paper.Title}}
+                    </li>
+                    <li class="animate-repeat" ng-if="result.length === 0">
+                      <strong>No results found...</strong>
+                    </li>
+                  </ul>
+                </div>
+                
                 </div>
             </div>
         </div>
@@ -119,6 +131,8 @@
             "keyword_option": "1",
             "search_text": ""
         };
+        
+        $scope.result=[];
 
         $scope.get_result=function(){
             $scope.search.search_option=$scope.search_op_temp;
@@ -126,11 +140,7 @@
              $http.put('ajax/search', $scope.search).then(
             //search success
             function(response){
-//              if (response.data == '1'){
-//                  console.log(response.data);
-//              }else {
-//                alert(response.data.reason);
-//              }
+                $scope.result=response.data.Paper_array;
                 console.log(response);
             },
             //search fail
