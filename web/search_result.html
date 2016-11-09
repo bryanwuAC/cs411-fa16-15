@@ -132,7 +132,8 @@
             "search_text": ""
         };
         
-        $scope.result=[];
+        //$scope.result=[
+        //];
 
         $scope.get_result=function(){
             $scope.search.search_option=$scope.search_op_temp;
@@ -141,7 +142,7 @@
             //search success
             function(response){
                 $scope.result=response.data.Paper_array;
-                console.log(response);
+                //console.log($scope.result);
             },
             //search fail
             function(){
