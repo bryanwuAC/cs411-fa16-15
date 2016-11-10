@@ -162,7 +162,7 @@
             $http.put('/ajax/deleteAccount', $scope.user).then(
                 function(response){
                     if(response.data.Ret == '1'){
-                        alert("User "+$scope.user.username+" has been deleted.");
+                        alert("User "+$scope.user.name+" has been deleted.");
                     }else{
                         alert("User does not exist!");
                     }

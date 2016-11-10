@@ -98,10 +98,10 @@
               console.log("in funtion");
              $http.put('/ajax/login', $scope.user).then(
             function(response){
-              if (response.data.result == 'success'){
-                  console.log(response.data);
+              if (response.data.Ret == '1'){
+                  alert(response.data.Reason);
               }else {
-                alert(response.data.reason);
+                alert(response.data.Reason);
               }
             },
             function(){

@@ -83,9 +83,10 @@
                 
                 <div ng-controller="searchCtrl">
                   Find {{result.length}} items.
+                  {{"Area: undefined "}}
                   <ul class="example-animate-container">
                     <li class="animate-repeat" ng-repeat="paper in result">
-                      [{{$index + 1}}] {{paper.Title}}
+                      [{{$index + 1}}] {{paper.Title}}  
                     </li>
                     <li class="animate-repeat" ng-if="result.length === 0">
                       <strong>No results found...</strong>
