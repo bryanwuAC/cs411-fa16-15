@@ -188,32 +188,23 @@ log.Println("In ajaxController getting logging")
 		return
 	}
 
-	message := ""
 	rows, res, err := db.Query("select * from Users where name = '%s'", admin_name)
-	if err != nil {
-		log.Println(err)
-		message = "Query failed"
-	}
+
 	if rows == nil {
-		message = "Can't fine user:"+admin_name
+		OutputJson(w, 0, "Can't fine user:"+admin_name, nil)
+		return
 	}
 
 	name := res.Map("password")	//returns the index of column :"admin_password"
 	admin_password_db := rows[0].Str(name)
 
-	Flag := true
 	if admin_password_db != admin_password {
-		Flag = false
-		message = "Wrong password!"
+		OutputJson(w, 0, "Wrong password!", nil)
+		return
 	}else{
-		message = "Success!!"
+		OutputJson(w, 1, "Success!", nil)
 	}
 
-	if Flag == false{
-		OutputJson(w, 0, message, nil)
-	}else{
-		OutputJson(w, 1, message, nil)
-	}
 
 }
 
