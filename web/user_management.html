@@ -62,10 +62,10 @@
                 Username of the account you want to delete: <input type="text" ng-model="user.name" ng-name="username" required/>
                 <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
                 </form>
-                
+
                 <br/>
                 <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_password_switch()" value="Change password"/>
-                
+
                 <form name="update_password" class="css-form" ng-show="show_change_password" novalidate>
                 <br/>
                 Username: <input type="text" ng-model="user.name" ng-name="username" required/>
@@ -76,7 +76,7 @@
                 <br/>
                 <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
                 </form>
-                
+
                 <br/>
                 <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_recommendation_switch()" value="Recommendation"/>
                 <div ng-show="show_recommendation">
@@ -113,7 +113,7 @@
         $scope.show_change_password=false;
         $scope.show_recommendation=false;
         $scope.show_delete_account=false;
-        
+
         $scope.show_delete_switch=function(){
             $scope.user.name="";
             $scope.show_delete_account=!$scope.show_delete_account;
@@ -121,15 +121,15 @@
                 $scope.show_recommendation=false;
                 $scope.show_change_password=false;
         }
-        
-        $scope.show_password_switch=function(){
+
+        $scope.show_password_switch=function(){https://github.com/bryanwuAC/cs411-fa16-15.git
             $scope.user.name="";
             $scope.show_change_password=!$scope.show_change_password;
             if($scope.show_change_password)
                 $scope.show_recommendation=false;
                 $scope.show_delete_account=false;
         }
-        
+
         $scope.show_recommendation_switch=function(){
             $scope.user.name="";
             $scope.show_recommendation=!$scope.show_recommendation;
@@ -137,8 +137,8 @@
                 $scope.show_change_password=false;
                 $scope.show_delete_account=false;
         }
-        
-        
+
+
         $scope.update_password_try=function(){
             if($scope.user.password.valueOf() != $scope.user.password2.valueOf()){
                 alert("Password not match")
@@ -146,6 +146,7 @@
             }
             $http.put('/ajax/changePassword', $scope.user).then(
             function(response){
+              console.log(response);
               if (response.data.Ret == '1'){
                 alert("Password has been updated.")
               }else {
@@ -157,10 +158,11 @@
             }
             );
         }
-        
+
         $scope.delete_account_try=function(){
             $http.put('/ajax/deleteAccount', $scope.user).then(
                 function(response){
+                  console.log(response);
                     if(response.data.Ret == '1'){
                         alert("User "+$scope.user.name+" has been deleted.");
                     }else{
@@ -172,9 +174,9 @@
                 }
             );
         }
-    
+
     });
-    
-    
+
+
 
 </script>
