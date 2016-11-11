@@ -69,12 +69,13 @@ func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.
 	admin_name := U.Name
 	admin_password := U.Password
 
-	_, _, err = db.Query("UPDATE Users SET password = '%s' where name = '%s'", admin_password, admin_name)
-	if err != nil {
-		log.Println(err)
+	rows, _, err := db.Query("select * from Users where name = '%s'", admin_name)
+	if rows == nil {
 		OutputJson(w, 0, "user name does not exists", nil)
 		return
 	}
+
+	_, _, err = db.Query("UPDATE Users SET password = '%s' where name = '%s'", admin_password, admin_name)
 
 	OutputJson(w, 1, "Update successful!", nil)
 	log.Println("out ajaxController")
@@ -105,12 +106,13 @@ func (this *ajaxController) DeleteAccountAction(w http.ResponseWriter, r *http.R
 	log.Println(U)
 	admin_name := U.Name
 
-	_, _, err = db.Query("DELETE FROM Users where name = '%s'", admin_name)
-	if err != nil {
-		log.Println(err)
+	rows, _, err := db.Query("select * from Users where name = '%s'", admin_name)
+	if rows == nil {
 		OutputJson(w, 0, "user name does not exists", nil)
 		return
 	}
+	_, _, err = db.Query("DELETE FROM Users where name = '%s'", admin_name)
+
 
 	OutputJson(w, 1, "Delete successful!", nil)
 	log.Println("out ajaxController")
