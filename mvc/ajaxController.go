@@ -32,6 +32,9 @@ type Paper struct{
 	Title string   
 }
 
+type Counter struct{
+	Num string
+}
 type PaperSlice struct{
 	Paper_array []Paper
 }
@@ -44,6 +47,36 @@ type Result struct {
 
 
 type ajaxController struct {
+}
+func (this *ajaxController) FindcountAction(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
+
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "db connection failed", nil)
+		return
+	}
+	defer db.Close()
+   		
+   	rows, _, err := db.Query("SELECT COUNT(*) FROM Users")
+   	if err != nil {
+		log.Println(err)
+		return
+	}
+	count := rows[0].Str(0)
+	var C Counter
+	C.Num = count
+
+   	body, err := json.Marshal(C)
+	if err != nil {
+	    panic(err.Error())
+	    return
+	}
+	w.Write(body)
+	return
+
 }
 func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
@@ -193,7 +226,7 @@ log.Println("In ajaxController getting logging")
 	rows, res, err := db.Query("select * from Users where name = '%s'", admin_name)
 
 	if rows == nil {
-		OutputJson(w, 0, "Can't fine user:"+admin_name, nil)
+		OutputJson(w, 0, "Sorry, could not find user:"+admin_name, nil)
 		return
 	}
 

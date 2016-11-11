@@ -99,6 +99,9 @@
                 <p/>
                 <input class="btn btn-primary btn-xl page-scroll" ng-click="get_result()" value="CITA Search" >
 -->
+                <div> Find How many people are using this website! </div>
+                <input class="btn" type="button" ng-click="get_result()" value="Count Search" >
+
                 <a class="btn btn-primary btn-xl" href="search_result.html">Begin Search!</a>
             </div>
         </div>
@@ -159,28 +162,13 @@
 <script>
     var app=angular.module("search_module", []);
     app.controller('searchCtrl', function($http, $scope){
-        $scope.search_op_temp="1";
-        $scope.keyword_op_temp="1";
-        
-        $scope.search={
-            //1 means search professor, 2 means search paper
-            "search_option": "1",
-            //1 means 1st item, 2 means second item
-            "keyword_option": "1",
-            "search_text": ""
-        };
 
         $scope.get_result=function(){
-            $scope.search.search_option=$scope.search_op_temp;
-            $scope.search.keyword_option=$scope.keyword_op_temp;
-             $http.put('ajax/search', $scope.search).then(
+
+             $http.put('ajax/Findcount', $scope.search).then(
             //search success
             function(response){
-              if (response.data.result == 'success'){
-                  console.log(response.data);
-              }else {
-                alert(response.data.reason);
-              }
+                alert(response.data.Num + " people have registered!!");
             },
             //search fail
             function(){
