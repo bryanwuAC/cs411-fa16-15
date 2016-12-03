@@ -92,22 +92,25 @@
 </html>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular-cookies.js"></script>
 <script>
-    var app=angular.module("user_login", []);
-    app.controller('loginCtrl', function($http, $scope){
+    var app=angular.module("user_login", ['ngCookies']);
+    app.controller('loginCtrl', function($http, $scope, $window, $cookieStore){
         $scope.user={};
         $scope.login_try=function(){
               console.log("in funtion");
              $http.put('/ajax/login', $scope.user).then(
             function(response){
               if (response.data.Ret == '1'){
+                  $cookieStore.put("local_username", $scope.user.name);
                   alert(response.data.Reason);
               }else {
                 alert(response.data.Reason);
-              }
+              } 
             },
             function(){
+                $cookieStore.put("local_username", $scope.user.name);
               console.log("send failure");
             }
             );

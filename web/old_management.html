@@ -24,7 +24,6 @@
 
     <!-- Theme CSS -->
     <link href="css/creative.min.css" rel="stylesheet">
-    <link href="css/user_management.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,42 +54,37 @@
 
     <header>
         <div class="header-content">
-            <div class="container" ng-app="user_management" ng-controller="management_Ctrl">
-                <div class = "row">
-                    <div class="col-sm-6 sections">
-                        <h2 class="title">Recommenation</h2>
-                        
-                    </div>
-                    <div class="col-sm-3 sections">
-                        <h2 class="title">Change password</h2>
-                            <form name="update_password" class="css-form">
-                            Username: 
-                            <br>
-                            <input type="text" ng-model="user.name" ng-name="username" required/>
-                            <br>
-                            New Password: <br>
-                            <input type="password" ng-model="user.password" ng-name="password" required/>
-                            <br>
-                            Reenter New Password: <br>
-                            <input type="password" ng-model="user.password2" ng-name="password" required/>
-                            <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
-                            </form>
-                    </div>
-                    <div class="col-sm-3 sections">
-                        <h2 class="title">Delete account</h2>
-                        <form name="delete_account" >  
-                            Username: 
-                            <br>
-                            <input type="text" ng-model="user.name" ng-name="username" required/>
-                            <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
-                        </form>
-                    </div>
+            <div class="header-content-inner" ng-app="user_management" ng-controller="management_Ctrl">
+                <h1 id="homeHeading">Settings and functions</h1>
+                <hr>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_delete_switch()" value="Delete account"/>
+                <form name="delete_account" class="css-form" ng-show="show_delete_account" novalidate>
+                Username of the account you want to delete: <input type="text" ng-model="user.name" ng-name="username" required/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
+                </form>
 
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_password_switch()" value="Change password"/>
+
+                <form name="update_password" class="css-form" ng-show="show_change_password" novalidate>
+                <br/>
+                Username: <input type="text" ng-model="user.name" ng-name="username" required/>
+                <br/>
+                New Password: <input type="password" ng-model="user.password" ng-name="password" required/>
+                <br/>
+                Reenter New Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
+                </form>
+
+                <br/>
+                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_recommendation_switch()" value="Recommendation"/>
+                <div ng-show="show_recommendation">
+                    This is Recommendation palceholder.
                 </div>
             </div>
         </div>
     </header>
-
 
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>

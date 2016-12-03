@@ -24,6 +24,7 @@
 
     <!-- Theme CSS -->
     <link href="css/creative.min.css" rel="stylesheet">
+    <link href="css/user_management.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -54,37 +55,38 @@
 
     <header>
         <div class="header-content">
-            <div class="header-content-inner" ng-app="user_management" ng-controller="management_Ctrl">
-                <h1 id="homeHeading">Settings and functions</h1>
-                <hr>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_delete_switch()" value="Delete account"/>
-                <form name="delete_account" class="css-form" ng-show="show_delete_account" novalidate>
-                Username of the account you want to delete: <input type="text" ng-model="user.name" ng-name="username" required/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
-                </form>
+            <div class="container" ng-app="user_management" ng-controller="management_Ctrl">
+                <div class = "row">
+                    <div class="col-sm-6 sections">
+                        <h2 class="title">Recommenation</h2>
+                        
+                    </div>
+                    <div class="col-sm-3 sections">
+                        <h2 class="title">Change password</h2>
+                            <form name="update_password" class="css-form">
+                            New Password: <br>
+                            <input type="password" ng-model="user.password" ng-name="password" required/>
+                            <br>
+                            Reenter New Password: <br>
+                            <input type="password" ng-model="user.password2" ng-name="password" required/>
+                            <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
+                            </form>
+                    </div>
+                    <div class="col-sm-3 sections">
+                        <h2 class="title">Delete account</h2>
+                        <form name="delete_account" >  
+                            Username: 
+                            <br>
+                            <input type="text" ng-model="user.name" ng-name="username" required/>
+                            <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="delete_account_try()" value="Confirm"/>
+                        </form>
+                    </div>
 
-                <br/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_password_switch()" value="Change password"/>
-
-                <form name="update_password" class="css-form" ng-show="show_change_password" novalidate>
-                <br/>
-                Username: <input type="text" ng-model="user.name" ng-name="username" required/>
-                <br/>
-                New Password: <input type="password" ng-model="user.password" ng-name="password" required/>
-                <br/>
-                Reenter New Password: <input type="password" ng-model="user.password2" ng-name="password" required/>
-                <br/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="update_password_try()" value="Confirm"/>
-                </form>
-
-                <br/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="show_recommendation_switch()" value="Recommendation"/>
-                <div ng-show="show_recommendation">
-                    This is Recommendation palceholder.
                 </div>
             </div>
         </div>
     </header>
+
 
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -106,40 +108,13 @@
 </html>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular-cookies.js"></script>
 <script>
-    var app=angular.module("user_management", []);
-    app.controller('management_Ctrl', function($http, $scope){
+    var app=angular.module("user_management", ['ngCookies']);
+    app.controller('management_Ctrl', function($http, $scope,$cookieStore){
         $scope.user={};
-        $scope.show_change_password=false;
-        $scope.show_recommendation=false;
-        $scope.show_delete_account=false;
-
-        $scope.show_delete_switch=function(){
-            $scope.user.name="";
-            $scope.show_delete_account=!$scope.show_delete_account;
-            if($scope.show_delete_account)
-                $scope.show_recommendation=false;
-                $scope.show_change_password=false;
-        }
-
-        $scope.show_password_switch=function(){https://github.com/bryanwuAC/cs411-fa16-15.git
-            $scope.user.name="";
-            $scope.show_change_password=!$scope.show_change_password;
-            if($scope.show_change_password)
-                $scope.show_recommendation=false;
-                $scope.show_delete_account=false;
-        }
-
-        $scope.show_recommendation_switch=function(){
-            $scope.user.name="";
-            $scope.show_recommendation=!$scope.show_recommendation;
-            if($scope.show_recommendation)
-                $scope.show_change_password=false;
-                $scope.show_delete_account=false;
-        }
-
-
+        
         $scope.update_password_try=function(){
             if($scope.user.password.valueOf() != $scope.user.password2.valueOf()){
                 alert("Password not match")
@@ -161,11 +136,19 @@
         }
 
         $scope.delete_account_try=function(){
+            if($scope.user.name==null){
+                alert("Username cannot be empty");
+            }else if($scope.user.name.valueOf()!=$scope.local_username.valueOf()){
+                alert("Username does not match");
+                return;
+            }
+                
             $http.put('/ajax/deleteAccount', $scope.user).then(
                 function(response){
                   console.log(response);
                     if(response.data.Ret == '1'){
                         alert("User "+$scope.user.name+" has been deleted.");
+                        $scope.local_username=null;
                     }else{
                         alert("User does not exist!");
                     }
@@ -175,6 +158,10 @@
                 }
             );
         }
+        
+        $scope.local_username=$cookieStore.get('local_username');
+        if($scope.local_username==null)
+            alert("You have not logged in!");
 
     });
 
