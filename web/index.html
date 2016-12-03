@@ -161,8 +161,8 @@
 
 
 <script>
-    var app=angular.module("search_module", []);
-    app.controller('searchCtrl', function($http, $scope){
+    var app=angular.module("search_module", ['ngCookies']);
+    app.controller('searchCtrl', function($cookies, $http, $scope){
 
         $scope.get_result=function(){
 
@@ -176,7 +176,15 @@
               console.log("send failure");
             }
             );
-}
+        }
+        
+        $scope.check_login=function{
+            var local_username=$cookies.get('local_username');
+            
+            var local_password=$cookies.get('local_password')
+            
+        }
+        
     
     });
     
