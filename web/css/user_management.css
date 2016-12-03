@@ -1,0 +1,29 @@
+
+
+
+.title{
+  border:2px solid #aaa;
+
+}
+#Recommendation_box{
+  /*padding-top: 300px;*/
+  width:500px;
+  height:500px;
+  border:2px solid #0bf;
+  margin-left: 0;
+
+}
+
+.row{
+  height:400px;
+}
+.sections{
+	/*background-color: #000*/
+}
+.top_bar{
+  border:2px solid #0bf;
+  width:500px;
+  height:200px;
+  margin-left: 0;
+
+}

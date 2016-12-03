@@ -239,7 +239,8 @@ log.Println("In ajaxController getting logging")
 	}else{
 		OutputJson(w, 1, "Success!", nil)
 	}
-
+	cookie := http.Cookie{Name: "admin_name", Value: admin_name, Path: "/"}
+	http.SetCookie(w, &cookie)
 
 }
 
