@@ -108,6 +108,7 @@
               if (response.data.Ret=="1"){
                 $cookieStore.put("local_username",$scope.user.name);
                 alert(response.data.Reason);
+                $window.location.href("index.html");
               }else {
                 alert("User name exists, please use another user name!");
               }

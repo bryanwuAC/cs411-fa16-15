@@ -49,14 +49,17 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li ng-show="login_status">
+                    <li id="_login">
                         <a class="page-scroll" href="user_login.html">Log in</a>
                     </li>
-                    <li ng-show="login_status">
+                    <li id="_signup">
                         <a class="page-scroll" href="user_signup.html">Sign up</a>
                     </li>
-                    <li>
+                    <li id="_myaccount">
                         <a class="page-scroll" href="user_management.html">My Account</a>
+                    </li>
+                    <li id="_logout">
+                        <a class="page-scroll" href="index.html">Log out</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#about">Project Description</a>
@@ -73,30 +76,7 @@
             <div class="header-content-inner" ng-app="search_module" ng-controller="searchCtrl" ng-init="search_option=1" ng-init="keyword_option=1">
                 <h1 id="homeHeading">CITA</h1>
                 <hr>
-<!--
-                <p>
-                <form name="search" class="css-form" novalidate>
-                <input type="text" ng-model="search.search_text" ng-name="content" required/>
-                <br/>
-                Search option:
-                <input type="radio" ng-model="search_op_temp" value="1" name="search_option_radio"/> Search Professor
-                <input type="radio" ng-model="search_op_temp" value="2" name="search_option_radio"/> Search paper
-                <br/>
-                Keyword settings:
-                    <select ng-show="search.search_option==1" ng-init="search.keyword_option=prof_options[0]" ng-model="search.keyword_option"  ng-options="option.name for option in prof_options"/>
-                <select ng-show="search_op_temp==1" ng-model="keyword_op_temp">
-                    <option value="1"/>Professor name
-                    <option value="2"/>Focus area
-                </select>
-                <select ng-show="search_op_temp==2" ng-model="keyword_op_temp">
-                    <option value="1"/>Title
-                    <option value="2"/>Area
-                </select>
-                <br/>
-                </form>
-                <p/>
-                <input class="btn btn-primary btn-xl page-scroll" ng-click="get_result()" value="CITA Search" >
--->
+
                 <div> Find How many people are using this website! </div>
                 <input class="btn btn-primary btn-xl" type="button" ng-click="get_result()" value="Count People" >
                 <br/>
@@ -104,7 +84,7 @@
                 <a class="btn btn-primary btn-xl" href="search_result.html">Begin Search!</a>
                 <br/>
                 <br/>
-                <input class="btn btn-primary btn-xl" type="button" ng-click="logout()" value="Log out" >
+                <input class="btn btn-primary btn-xl" ng-hide="local_username==null" type="button" ng-click="logout()" value="Log out" >
             </div>
         </div>
     </header>
@@ -184,12 +164,22 @@
             console.log("log out");
             $cookieStore.remove('local_username');
             $scope.local_username=null;
+            document.getElementById('_login').style.display='initial';
+            document.getElementById('_signup').style.display='initial';
+            document.getElementById('_myaccount').style.display='none';
+            document.getElementById('_logout').style.display='none';
             console.log($scope.local_username);
         }
         
         
         $scope.local_username=$cookieStore.get('local_username');
-        $scope.login_status=$scope.local_username!=null;
+        if($cookieStore.get('local_username')!=null){
+            document.getElementById('_login').style.display='none';
+            document.getElementById('_signup').style.display='none';
+        }else{
+            document.getElementById('_myaccount').style.display='none';
+            document.getElementById('_logout').style.display='none';
+        }
         console.log($scope.local_username);
     });
     
