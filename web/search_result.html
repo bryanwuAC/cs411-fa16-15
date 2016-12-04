@@ -159,7 +159,7 @@
              $http.put('ajax/search', $scope.search).then(
             //search success
             function(response){
-                $scope.result=response.data.Paper_array;
+                $scope.result=response.data.Data.Paper_array;
                 //console.log($scope.result);
             },
             //search fail
