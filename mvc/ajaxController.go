@@ -22,15 +22,14 @@ type user struct {
 }
 
 type like struct{
-	User string
-	Title string
+	Name string
+	Favorite string
 }
 type search struct {
 	Search_option string
 	Keyword_option string
 	Search_text string
 }
-
 
 type Paper struct{
 	Title string 
@@ -53,36 +52,7 @@ type Result struct {
 
 type ajaxController struct {
 }
-func (this *ajaxController) FindcountAction(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
 
-	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
- 	err := db.Connect()
-	if err != nil {
-		log.Println(err)
-		OutputJson(w, 0, "db connection failed", nil)
-		return
-	}
-	defer db.Close()
-   		
-   	rows, _, err := db.Query("SELECT COUNT(*) FROM Users")
-   	if err != nil {
-		log.Println(err)
-		return
-	}
-	count := rows[0].Str(0)
-	var C Counter
-	C.Num = count
-
-   	body, err := json.Marshal(C)
-	if err != nil {
-	    panic(err.Error())
-	    return
-	}
-	w.Write(body)
-	return
-
-}
 func (this *ajaxController) ChangePasswordAction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
@@ -214,7 +184,7 @@ func (this *ajaxController) Like_paperAction(w http.ResponseWriter, r *http.Requ
 
 	log.Println(L)
 
-	_, _, err = db.Query("INSERT INTO favorite VALUES ('%s','%s')", L.User, L.Title)
+	_, _, err = db.Query("INSERT INTO favorite VALUES ('%s','%s')", L.Name, L.Favorite)
 	if err != nil {
 		log.Println(err)
 		OutputJson(w, 0, "favorite failed", nil)
@@ -242,7 +212,7 @@ func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) 
 
 	log.Println("body is",r.Body)
 	var U user
-	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+	err = json.NewDecoder(r.Body).Decode(&U)	
 
 	if err != nil {
 		log.Println("error:", err)
