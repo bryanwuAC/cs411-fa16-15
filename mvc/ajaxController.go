@@ -11,7 +11,7 @@ import (
     //"fmt"
     //"time"
 	//"strconv"
-	//"strings"
+	"strings"
     "github.com/ziutek/mymysql/mysql"
     _ "github.com/ziutek/mymysql/thrsafe"
 )
@@ -21,6 +21,10 @@ type user struct {
 	Password string
 }
 
+type like struct{
+	User string
+	Title string
+}
 type search struct {
 	Search_option string
 	Keyword_option string
@@ -189,9 +193,41 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 	log.Println("out ajaxController")
 	return
 }
+func (this *ajaxController) Like_paperAction(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/json")
 
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "failed to connect to", nil)
+		return
+	}
+	defer db.Close()
+
+	// log.Println("body is",r.Body)
+	var L like
+	err = json.NewDecoder(r.Body).Decode(&L)	
+	if err != nil {
+		log.Println("error:", err)
+	}
+
+	log.Println(L)
+
+	_, _, err = db.Query("INSERT INTO favorite VALUES ('%s','%s')", L.User, L.Title)
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "favorite failed", nil)
+		return
+	}
+
+	OutputJson(w, 1, "favorite successful!", nil)
+	log.Println("out ajaxController")
+	return
+
+}
 func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) {
-log.Println("In ajaxController getting logging")
+	log.Println("In ajaxController getting logging")
 	w.Header().Set("content-type", "application/json")
 
 	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
@@ -279,6 +315,11 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 	var Slice PaperSlice
 
 	if search_option == "1" && keyword_option == "1"{
+		var original string
+		if strings.Contains(search_text, "'") {
+			original = search_text
+			search_text = strings.Replace(search_text, "'", "%"+"\\"+"'%", -1)
+		}
 		rows, _, err := db.Query("select TITLE, URL from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
 
 		if err != nil {
@@ -288,16 +329,21 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 		}else{
 			log.Println("Query execution succeeded.")
 		}	
-
+		if rows == nil{
+			OutputJson(w, 0, "No paper of " + original +"has been found!", Slice)
+		}
 		for _, row := range rows {
 			Paper := Paper{}
 			Paper.Title = row.Str(0)
 			Paper.URL = row.Str(1)		
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
    		}	
+
 	}else if search_option == "2" && keyword_option == "1"{
-		rows, _, err := db.Query("select TITLE, URL from paper where TITLE like '%s'",search_text)
+		text := "%"+search_text+ "%"
+		rows, _, err := db.Query("select TITLE, URL from paper where TITLE like '%s'",text)
 		
+
 		if err != nil {
 			log.Println(err)
 			OutputJson(w, 0, "Query execution failed", nil)
@@ -312,17 +358,16 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 			Paper.URL = row.Str(1)	
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
    		}	
+   		log.Println("array length: ",len(Slice.Paper_array))
+
+   		if len(Slice.Paper_array) > 50{
+   			OutputJson(w, 0, "Too many items! Please be more specific!", nil)
+   			return
+   		}
 	}
 
-
-   	body, err = json.Marshal(Slice)
-	if err != nil {
-	    panic(err.Error())
-	    return
-	}
-	w.Write(body)
+	OutputJson(w, 1, "success", Slice)
 	return
-
 }
 
 func OutputJson(w http.ResponseWriter, ret int, reason string, i interface{}) {
