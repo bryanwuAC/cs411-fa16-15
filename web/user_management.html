@@ -120,6 +120,7 @@
                 alert("Password not match")
                 return;
             }
+            $scope.user.name=$scope.local_username;
             $http.put('/ajax/changePassword', $scope.user).then(
             function(response){
               console.log(response);

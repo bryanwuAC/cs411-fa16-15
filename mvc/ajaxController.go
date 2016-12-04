@@ -29,7 +29,8 @@ type search struct {
 
 
 type Paper struct{
-	Title string   
+	Title string 
+	URL string  
 }
 
 type Counter struct{
@@ -278,19 +279,37 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 	var Slice PaperSlice
 
 	if search_option == "1" && keyword_option == "1"{
-		rows, _, err := db.Query("select TITLE from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
+		rows, _, err := db.Query("select TITLE, URL from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
 
 		if err != nil {
 			log.Println(err)
 			OutputJson(w, 0, "Query execution failed", nil)
 			return
 		}else{
-			log.Println("db conncted!")
+			log.Println("Query execution succeeded.")
 		}	
 
 		for _, row := range rows {
 			Paper := Paper{}
-			Paper.Title = row.Str(0)	
+			Paper.Title = row.Str(0)
+			Paper.URL = row.Str(1)		
+			Slice.Paper_array = append(Slice.Paper_array, Paper)
+   		}	
+	}else if search_option == "2" && keyword_option == "1"{
+		rows, _, err := db.Query("select TITLE, URL from paper where TITLE like '%s'",search_text)
+		
+		if err != nil {
+			log.Println(err)
+			OutputJson(w, 0, "Query execution failed", nil)
+			return
+		}else{
+			log.Println("Query execution succeeded.")
+		}	
+
+		for _, row := range rows {
+			Paper := Paper{}
+			Paper.Title = row.Str(0)
+			Paper.URL = row.Str(1)	
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
    		}	
 	}
