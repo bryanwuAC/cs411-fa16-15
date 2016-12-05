@@ -38,7 +38,12 @@ type Paper struct{
 	Title string 
 	URL string  
 }
-
+type RecommendPaper struct{
+	Title string 
+	URL string  
+	Author string
+	Tag string
+}
 type Counter struct{
 	Num string
 }
@@ -46,7 +51,7 @@ type PaperSlice struct{
 	Paper_array []Paper
 }
 type PaperSlices struct{
-	Paper_array []Paper
+	Paper_array []RecommendPaper
 	Paper_array_2 []Paper
 }
 
@@ -287,9 +292,11 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 	var Slices PaperSlices
 
 	for _, row := range rows {
-		Paper := Paper{}
+		Paper := RecommendPaper{}
 		Paper.Title = row.Str(0)
-		Paper.URL = row.Str(1)		
+		Paper.URL = row.Str(1)	
+		Paper.Author = row.Str(2)	
+		Paper.Tag = row.Str(3)	
 		Slices.Paper_array = append(Slices.Paper_array, Paper)
    	}	
 
