@@ -75,12 +75,11 @@
                 <br/>
                 </form>
                 <p/>
-                <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="get_result()" value="CITA Search" >
-                <div>
-                
-                <div ng-controller="searchCtrl">
+                  <input class="btn btn-primary btn-xl page-scroll" type="button" ng-click="get_result()" value="CITA Search" >
+                  <br/>
                   Find {{result.length}} items.
                   <ul class="example-animate-container">
+                      <script>console.log(filteredTodos)</script>
                     <ul ng-repeat="paper in filteredTodos">
                         <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
                         <a ng-show="local_username!=null" ng-click="like_paper($index+1)">Like</a>
