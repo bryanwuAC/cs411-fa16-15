@@ -60,7 +60,7 @@
                     <div class="col-sm-4 sections">
                         <h2 class="title">Recommenation</h2>
                         <li class="animate-repeat" ng-repeat="paper in filteredTodos">
-                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}} ----- {{paper.Author}}</a>
+                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}} ----- {{paper.Author}} ----- Area:{{paper.Tag}}</a>
                         </li>
                         <div data-pagination="" data-num-pages="numPages" 
                       data-current-page="currentPage" data-max-size="maxSize"
@@ -87,7 +87,7 @@
                     <div class="col-sm-5 sections">
                         <h2 class="title">My Favorite</h2>
                         <li class="animate-repeat" ng-repeat="paper in favorite">
-                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
+                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}} ----- {{paper.Author}} ----- Area:{{paper.Tag}}</a>
                         </li>
                         
                     </div>
@@ -127,7 +127,7 @@
     app.controller('management_Ctrl', function($http, $scope,$cookieStore){
         $scope.user={};
         $scope.currentPage = 1
-      ,$scope.numPerPage = 8
+      ,$scope.numPerPage = 6
       ,$scope.maxSize = 3;
         
         $scope.update_password_try=function(){
@@ -187,7 +187,7 @@
             $scope.user.name=$scope.local_username;
             $http.put('/ajax/getFavAndRec', $scope.user).then(
             function(response){
-              console.log(response);
+//              console.log(response);
                 if(response.data.Ret == '1'){
                     $scope.recommendation=response.data.Data.Paper_array;
                     console.log($scope.recommendation);
@@ -203,7 +203,7 @@
                     $scope.favorite=response.data.Data.Paper_array_2;
                     console.log("collect data complete");
                     console.log($scope.favorite);
-                    console.log($scope.recommendation);
+//                    console.log($scope.recommendation);
                 }else{
                     alert("User does not exist!");
                 }
