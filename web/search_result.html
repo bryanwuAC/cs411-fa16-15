@@ -79,7 +79,7 @@
                 <div>
                 
                 <div ng-controller="searchCtrl">
-                  Find {{result.length}} items. {{filteredTodos.length}}
+                  Find {{result.length}} items.
                   <ul class="example-animate-container">
                     <ul ng-repeat="paper in filteredTodos">
                         <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
@@ -193,12 +193,6 @@
         
         $scope.local_username=$cookieStore.get('local_username');
         
-           $scope.filteredTodos = []
-          ,$scope.currentPage = 1
-          ,$scope.numPerPage = 6
-          ,$scope.maxSize = 10;
-
-
     
     })
     
