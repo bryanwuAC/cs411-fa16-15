@@ -60,7 +60,7 @@
                     <div class="col-sm-4 sections">
                         <h2 class="title">Recommenation</h2>
                         <li class="animate-repeat" ng-repeat="paper in filteredTodos">
-                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
+                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}} ----- {{paper.Author}}</a>
                         </li>
                         <div data-pagination="" data-num-pages="numPages" 
                       data-current-page="currentPage" data-max-size="maxSize"
@@ -190,6 +190,7 @@
               console.log(response);
                 if(response.data.Ret == '1'){
                     $scope.recommendation=response.data.Data.Paper_array;
+                    console.log($scope.recommendation);
                     $scope.numPages=Math.ceil($scope.recommendation.length / $scope.numPerPage);
                     $scope.$watch('currentPage + numPerPage', function() {
                         var begin = (($scope.currentPage - 1) * $scope.numPerPage)
