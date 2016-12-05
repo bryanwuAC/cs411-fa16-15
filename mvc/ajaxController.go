@@ -287,7 +287,7 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 	}
 	admin_name := U.Name
 	log.Println(admin_name)
-	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL, people.name, paper.tag from paper, writtenby, favorite, people where paper.id = writtenby.paper and writtenby.PERSON = people.ID and people.name in ( select name from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID ) and paper.tag in ( select tag from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID)",admin_name, admin_name)
+	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL, people.name, paper.tag from paper, writtenby, favorite, people where paper.Title not in (select Title from favorite where User = '%s') and paper.id = writtenby.paper and writtenby.PERSON = people.ID and people.name in ( select name from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID ) and paper.tag in ( select tag from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID)",admin_name, admin_name, admin_name)
 	print("rec rows length:",len(rows))
 	var Slices PaperSlices
 
@@ -301,7 +301,7 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
    	}	
 
    	rows, _, err = db.Query("select paper.Title, paper.URL from favorite, paper where favorite.User = '%s' and favorite.Title = paper.title", admin_name)
-   	print("fav rows length:",len(rows))
+   	print("\nfav rows length:",len(rows))
    	for _, row := range rows {
 		Paper := Paper{}
 		Paper.Title = row.Str(0)
