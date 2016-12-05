@@ -59,9 +59,12 @@
                 <div class = "row">
                     <div class="col-sm-4 sections">
                         <h2 class="title">Recommenation</h2>
-                        <li class="animate-repeat" ng-repeat="paper in recommendation">
+                        <li class="animate-repeat" ng-repeat="paper in filteredTodos">
                         <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
                         </li>
+                        <div data-pagination="" data-num-pages="numPages" 
+                      data-current-page="currentPage" data-max-size="maxSize"
+                      data-boundary-links="true"></div>
                     </div>
                     <div class="col-sm-3 sections">
                         <h2 class="title">Change password</h2>
@@ -117,10 +120,15 @@
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular-cookies.js"></script>
+<link data-require="bootstrap-css@2.3.2" data-semver="2.3.2" rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" />
+ <script data-require="angular-ui-bootstrap@0.3.0" data-semver="0.3.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>
 <script>
-    var app=angular.module("user_management", ['ngCookies']);
+    var app=angular.module("user_management", ['ngCookies','ui.bootstrap']);
     app.controller('management_Ctrl', function($http, $scope,$cookieStore){
         $scope.user={};
+        $scope.currentPage = 1
+      ,$scope.numPerPage = 8
+      ,$scope.maxSize = 3;
         
         $scope.update_password_try=function(){
             if($scope.user.password.valueOf() != $scope.user.password2.valueOf()){
@@ -142,7 +150,7 @@
             }
             );
         }
-
+        
         $scope.delete_account_try=function(){
             if($scope.user.name==null){
                 alert("Username cannot be empty");
@@ -169,11 +177,12 @@
             );
         }
         
+        
         $scope.init=function(){
             $scope.local_username=$cookieStore.get('local_username');
             if($scope.local_username==null){
                 alert("You have not logged in!");
-                window.location.href="index.html";
+//                window.location.href="index.html";
             }
             $scope.user.name=$scope.local_username;
             $http.put('/ajax/getFavAndRec', $scope.user).then(
@@ -181,6 +190,15 @@
               console.log(response);
                 if(response.data.Ret == '1'){
                     $scope.recommendation=response.data.Data.Paper_array;
+                    $scope.numPages=Math.ceil($scope.recommendation.length / $scope.numPerPage);
+                    $scope.$watch('currentPage + numPerPage', function() {
+                        var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+                        , end = begin + $scope.numPerPage;
+                        console.log("begin "+begin);
+                        console.log("end"+end);
+                        $scope.filteredTodos = $scope.recommendation.slice(begin, end);
+                    });
+                    
                     $scope.favorite=response.data.Data.Paper_array_2;
                     console.log("collect data complete");
                     console.log($scope.favorite);
