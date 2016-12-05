@@ -55,11 +55,10 @@
 
     <header>
         <div class="header-content">
-            <div class="container" ng-app="user_management" ng-controller="management_Ctrl">
+            <div class="container" ng-app="user_management" ng-controller="management_Ctrl" data-ng-init="init()">
                 <div class = "row">
                     <div class="col-sm-4 sections">
                         <h2 class="title">Recommenation</h2>
-                        
                         <li class="animate-repeat" ng-repeat="paper in recommendation">
                         <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
                         </li>
@@ -167,20 +166,23 @@
                 }
             );
         }
-                
         
-        $scope.local_username=$cookieStore.get('local_username');
-        if($scope.local_username==null){
-            alert("You have not logged in!");
-            window.location.href="index.html";
-        }
-        $scope.user.name=$scope.local_username;
-        $http.put('/ajax/getFavAndRec', $scope.user).then(
+        $scope.init=function(){
+            $scope.local_username=$cookieStore.get('local_username');
+            if($scope.local_username==null){
+                alert("You have not logged in!");
+                window.location.href="index.html";
+            }
+            $scope.user.name=$scope.local_username;
+            $http.put('/ajax/getFavAndRec', $scope.user).then(
             function(response){
               console.log(response);
                 if(response.data.Ret == '1'){
                     $scope.favorite=response.data.Paper_array;
                     $scope.recommendation=response.data.Paper_array_2;
+                    console.log("collect data complete");
+                    console.log($scope.favorite);
+                    console.log($scope.recommendation);
                 }else{
                     alert("User does not exist!");
                 }
@@ -188,7 +190,8 @@
             function(){
                 console.log("send failure");
             }
-        );
+        );  
+        }
     });
 
 
