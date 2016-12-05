@@ -167,11 +167,7 @@
                 }
             );
         }
-        
-        $scope.recommendation=[{"Title":"Disparity-Based 3D Face Modeling for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICIP.2006.312416"},{"Title":"Disparity-Based 3D Face Modeling using 3D Deformable Facial Mask for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICME.2006.262697http://doi.ieeecomputersociety.org/10.1109/ICME.2006.262697"},{"Title":"3-D Face Modeling Using Two Views and a Generic Face Model with Application to 3-D Face Recognition.","URL":"http://dx.doi.org/10.1109/AVSS.2003.1217899http://doi.ieeecomputersociety.org/10.1109/AVSS.2003.1217899"},{"Title":"3D Face Mesh Modeling from Range Images for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICIP.2007.4380066"},{"Title":"A multimodal approach for 3D face modeling and recognition using 3D deformable facial mask.","URL":"http://dx.doi.org/10.1007/s00138-008-0123-5"},{"Title":"Tracking multiple people with recovery from partial and total occlusion.","URL":"http://dx.doi.org/10.1016/j.patcog.2004.11.022"},{"Title":"Improved Active Shape Model for Facial Feature Extraction in Color Images.","URL":"http://www.academypublisher.com/jmm/vol01/no04/jmm01042128.html"},{"Title":"Multi-modal (2-D and 3-D) face modeling and recognition using Attributed Relational Graph.","URL":"http://dx.doi.org/10.1109/ICIP.2008.4712366"},{"Title":"Automatic facial feature extraction and 3D face modeling using two orthogonal views with application to 3D face recognition.","URL":"http://dx.doi.org/10.1016/j.patcog.2005.04.016"},{"Title":"3D face modeling using two orthogonal views and a generic face model.","URL":"http://dx.doi.org/10.1109/ICME.2003.1221305http://doi.ieeecomputersociety.org/10.1109/ICME.2003.1221305"}];
-        
-        $scope.favorite=[{"Title":"Disparity-Based 3D Face Modeling for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICIP.2006.312416"},{"Title":"Disparity-Based 3D Face Modeling using 3D Deformable Facial Mask for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICME.2006.262697http://doi.ieeecomputersociety.org/10.1109/ICME.2006.262697"},{"Title":"3-D Face Modeling Using Two Views and a Generic Face Model with Application to 3-D Face Recognition.","URL":"http://dx.doi.org/10.1109/AVSS.2003.1217899http://doi.ieeecomputersociety.org/10.1109/AVSS.2003.1217899"},{"Title":"3D Face Mesh Modeling from Range Images for 3D Face Recognition.","URL":"http://dx.doi.org/10.1109/ICIP.2007.4380066"},{"Title":"A multimodal approach for 3D face modeling and recognition using 3D deformable facial mask.","URL":"http://dx.doi.org/10.1007/s00138-008-0123-5"},{"Title":"Tracking multiple people with recovery from partial and total occlusion.","URL":"http://dx.doi.org/10.1016/j.patcog.2004.11.022"},{"Title":"Improved Active Shape Model for Facial Feature Extraction in Color Images.","URL":"http://www.academypublisher.com/jmm/vol01/no04/jmm01042128.html"},{"Title":"Multi-modal (2-D and 3-D) face modeling and recognition using Attributed Relational Graph.","URL":"http://dx.doi.org/10.1109/ICIP.2008.4712366"},{"Title":"Automatic facial feature extraction and 3D face modeling using two orthogonal views with application to 3D face recognition.","URL":"http://dx.doi.org/10.1016/j.patcog.2005.04.016"},{"Title":"3D face modeling using two orthogonal views and a generic face model.","URL":"http://dx.doi.org/10.1109/ICME.2003.1221305http://doi.ieeecomputersociety.org/10.1109/ICME.2003.1221305"}];
-        
+                
         
         $scope.local_username=$cookieStore.get('local_username');
         if($scope.local_username==null){
@@ -183,8 +179,8 @@
             function(response){
               console.log(response);
                 if(response.data.Ret == '1'){
-                    $scope.favorite=response.data.Fav;
-                    $scope.recommendation=response.data.Rec;
+                    $scope.favorite=response.data.Paper_array;
+                    $scope.recommendation=response.data.Paper_array_2;
                 }else{
                     alert("User does not exist!");
                 }
