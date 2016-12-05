@@ -156,7 +156,9 @@
                   console.log(response);
                     if(response.data.Ret == '1'){
                         alert("User "+$scope.user.name+" has been deleted.");
+                        $cookieStore.remove("local_username");
                         $scope.local_username=null;
+                        window.location.href="index.html";
                     }else{
                         alert("User does not exist!");
                     }
