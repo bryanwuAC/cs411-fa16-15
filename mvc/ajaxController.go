@@ -20,6 +20,9 @@ type user struct {
 	Name  string
 	Password string
 }
+type username struct {
+	Name  string
+}
 
 type like struct{
 	Name string
@@ -41,6 +44,10 @@ type Counter struct{
 }
 type PaperSlice struct{
 	Paper_array []Paper
+}
+type PaperSlices struct{
+	Paper_array []Paper
+	Paper_array_2 []Paper
 }
 
 type Result struct {
@@ -141,7 +148,8 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 
 	log.Println("body is",r.Body)
 	var U user
-	err = json.NewDecoder(r.Body).Decode(&U)	// body, err := ioutil.ReadAll(r.Body)
+	err = json.NewDecoder(r.Body).Decode(&U)	
+	// body, err := ioutil.ReadAll(r.Body)
 
 	if err != nil {
 		log.Println("error:", err)
@@ -166,7 +174,7 @@ func (this *ajaxController) SignupAction(w http.ResponseWriter, r *http.Request)
 func (this *ajaxController) Like_paperAction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
-	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "Administrator")
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "dblp_csv")
  	err := db.Connect()
 	if err != nil {
 		log.Println(err)
@@ -197,6 +205,7 @@ func (this *ajaxController) Like_paperAction(w http.ResponseWriter, r *http.Requ
 
 }
 func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("In ajaxController getting logging")
 	w.Header().Set("content-type", "application/json")
 
@@ -250,7 +259,53 @@ func (this *ajaxController) LoginAction(w http.ResponseWriter, r *http.Request) 
 	http.SetCookie(w, &cookie)
 
 }
+func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Request) {
+	log.Println("In ajaxController GetFavAndRecAction")
+	w.Header().Set("content-type", "application/json")
+	//get Recommendation First 
+	db := mysql.New("tcp", "", "localhost:3306", "root", "wwcl2016", "dblp_csv")
+ 	err := db.Connect()
+	if err != nil {
+		log.Println(err)
+		OutputJson(w, 0, "failed to connect to db", nil)
+		return
+	}
+	defer db.Close()
 
+	// body, _ := ioutil.ReadAll(r.Body)
+	// log.Println(string(body))
+
+	var U username
+	err = json.NewDecoder(r.Body).Decode(&U)	
+	if err != nil {
+		log.Println("276 error:", err)
+	}
+	admin_name := U.Name
+
+	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL from paper,favorite,writtenby,people where favorite.User = '%s' and favorite.Title = paper.title and paper.id = writtenby.paper and writtenby.PERSON = people.ID and paper.tag in (select tag from paper where paper.Title = favorite.Title)",admin_name)
+
+	var Slices PaperSlices
+
+	for _, row := range rows {
+		Paper := Paper{}
+		Paper.Title = row.Str(0)
+		Paper.URL = row.Str(1)		
+		Slices.Paper_array = append(Slices.Paper_array, Paper)
+   	}	
+
+   	rows, _, err = db.Query("select Title, URL from favorite, paper where favorite.User = '%s' ", admin_name)
+
+   	for _, row := range rows {
+		Paper := Paper{}
+		Paper.Title = row.Str(0)
+		Paper.URL = row.Str(1)
+		Slices.Paper_array_2 = append(Slices.Paper_array_2, Paper)
+   	}	
+
+	OutputJson(w, 1, "success", Slices)
+	return
+
+}
 func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request) {
 	log.Println("In ajaxController Searching")
 	w.Header().Set("content-type", "application/json")
