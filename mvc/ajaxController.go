@@ -334,9 +334,31 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
    			OutputJson(w, 0, "Too many items! Please be more specific!", nil)
    			return
    		}
-	}
+	}else if search_option == "2" && keyword_option == "2"{
+		rows, _, err := db.Query("select TITLE, URL from paper where tag = '%s'",search_text)
+		if err != nil {
+			log.Println(err)
+			OutputJson(w, 0, "Query execution failed", nil)
+			return
+		}else{
+			log.Println("Query execution succeeded.")
+		}	
+		count := 0
+		for _, row := range rows {
+			Paper := Paper{}
+			Paper.Title = row.Str(0)
+			Paper.URL = row.Str(1)	
+			Slice.Paper_array = append(Slice.Paper_array, Paper)
+			count += 1
+			if count >= 100{
+				break
+			}
+   		}	
+   		log.Println("array length: ",len(Slice.Paper_array))
 
+	}
 	OutputJson(w, 1, "success", Slice)
+
 	return
 }
 
