@@ -281,9 +281,9 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 		log.Println("276 error:", err)
 	}
 	admin_name := U.Name
-
-	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL from paper,favorite,writtenby,people where favorite.User = '%s' and favorite.Title = paper.title and paper.id = writtenby.paper and writtenby.PERSON = people.ID and paper.tag in (select tag from paper where paper.Title = favorite.Title)",admin_name)
-
+	log.Println(admin_name)
+	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL from paper,favorite,writtenby,people where paper.title not in favorite.title and favorite.User = '%s' and favorite.Title = paper.title and paper.id = writtenby.paper and writtenby.PERSON = people.ID and paper.tag in (select tag from paper where paper.Title = favorite.Title)",admin_name)
+	print("rec rows length:",len(rows))
 	var Slices PaperSlices
 
 	for _, row := range rows {
@@ -293,14 +293,16 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 		Slices.Paper_array = append(Slices.Paper_array, Paper)
    	}	
 
-   	rows, _, err = db.Query("select Title, URL from favorite, paper where favorite.User = '%s' ", admin_name)
-
+   	rows, _, err = db.Query("select paper.Title, paper.URL from favorite, paper where favorite.User = '%s' and favorite.Title = paper.title", admin_name)
+   	print("fav rows length:",len(rows))
    	for _, row := range rows {
 		Paper := Paper{}
 		Paper.Title = row.Str(0)
 		Paper.URL = row.Str(1)
 		Slices.Paper_array_2 = append(Slices.Paper_array_2, Paper)
    	}	
+
+   	log.Println(len(Slices.Paper_array),len(Slices.Paper_array_2))
 
 	OutputJson(w, 1, "success", Slices)
 	return

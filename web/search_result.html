@@ -79,13 +79,13 @@
                 <div>
                 
                 <div ng-controller="searchCtrl">
-                  Find {{result.length}} items. 
+                  Find {{result.length}} items. {{filteredTodos.length}}
                   <ul class="example-animate-container">
                     <ul ng-repeat="paper in filteredTodos">
                         <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
                         <a ng-show="local_username!=null" ng-click="like_paper($index+1)">Like</a>
                     </ul>
-                    <div data-pagination="" data-num-pages="numPages()" 
+                    <div data-pagination="" data-num-pages="numPages" 
                       data-current-page="currentPage" data-max-size="maxSize"
                       data-boundary-links="true"></div>
                       
@@ -130,6 +130,16 @@
         $scope.search_op_temp="1";
         $scope.keyword_op_temp="1";
         $scope.user={};
+        $scope.local_username=$cookieStore.get('local_username');
+
+
+       $scope.currentPage = 1
+      ,$scope.numPerPage = 6
+      ,$scope.maxSize = 10;
+
+        // $scope.numPages = function () {
+        //     return Math.ceil($scope.result.length / $scope.numPerPage);
+        // };
         
         $scope.search={
             //1 means search professor, 2 means search paper
@@ -162,6 +172,14 @@
             //search success
             function(response){
                 $scope.result=response.data.Data.Paper_array;
+                $scope.numPages=Math.ceil($scope.result.length / $scope.numPerPage);
+                $scope.$watch('currentPage + numPerPage', function() {
+                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+                , end = begin + $scope.numPerPage;
+                console.log("begin "+begin);
+                console.log("end"+end);
+                $scope.filteredTodos = $scope.result.slice(begin, end);
+        });
                 //console.log($scope.result);
             },
             //search fail
@@ -180,17 +198,7 @@
           ,$scope.numPerPage = 6
           ,$scope.maxSize = 10;
 
-        $scope.numPages = function () {
-            return Math.ceil($scope.result.length / $scope.numPerPage);
-        };
-  
-        $scope.$watch('currentPage + numPerPage', function() {
-            var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-            , end = begin + $scope.numPerPage;
-            console.log("begin "+begin);
-            console.log("end"+end);
-            $scope.filteredTodos = $scope.result.slice(begin, end);
-        });
+
     
     })
     
