@@ -79,9 +79,8 @@
                   <br/>
                   Find {{result.length}} items.
                   <ul class="example-animate-container">
-                      <script>console.log(filteredTodos)</script>
                     <ul ng-repeat="paper in filteredTodos">
-                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}} ----- {{paper.Author}} --- Area:{{paper.Tag}}</a>
+                        <a ng-href="{{paper.URL}}">{{$index + 1}}. {{paper.Title}}</a>
                         <a ng-show="local_username!=null" ng-click="like_paper($index+1)">Like</a>
                     </ul>
                     <div data-pagination="" data-num-pages="numPages" 
