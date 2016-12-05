@@ -105,14 +105,14 @@
               if (response.data.Ret == '1'){
                   $cookieStore.put("local_username", $scope.user.name);
                   alert(response.data.Reason);
-                  $window.location.href("index.html");
+                  window.location.href="index.html";
               }else {
                 alert(response.data.Reason);
               } 
             },
             function(){
                 $cookieStore.put("local_username", $scope.user.name);
-                console.log("send failure")；
+                console.log("send failure");
             }
             );
 }
