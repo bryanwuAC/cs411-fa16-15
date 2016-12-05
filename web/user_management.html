@@ -178,8 +178,8 @@
             function(response){
               console.log(response);
                 if(response.data.Ret == '1'){
-                    $scope.favorite=response.data.Paper_array;
-                    $scope.recommendation=response.data.Paper_array_2;
+                    $scope.recommendation=response.data.Data.Paper_array;
+                    $scope.favorite=response.data.Data.Paper_array_2;
                     console.log("collect data complete");
                     console.log($scope.favorite);
                     console.log($scope.recommendation);
