@@ -37,15 +37,13 @@ type search struct {
 type Paper struct{
 	Title string 
 	URL string  
+}
+type RecommendPaper struct{
+	Title string 
+	URL string  
 	Author string
 	Tag string
 }
-// type RecommendPaper struct{
-// 	Title string 
-// 	URL string  
-// 	Author string
-// 	Tag string
-// }
 type Counter struct{
 	Num string
 }
@@ -53,7 +51,7 @@ type PaperSlice struct{
 	Paper_array []Paper
 }
 type PaperSlices struct{
-	Paper_array []Paper
+	Paper_array []RecommendPaper
 	Paper_array_2 []Paper
 }
 
@@ -294,7 +292,7 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 	var Slices PaperSlices
 
 	for _, row := range rows {
-		Paper := Paper{}
+		Paper := RecommendPaper{}
 		Paper.Title = row.Str(0)
 		Paper.URL = row.Str(1)	
 		Paper.Author = row.Str(2)	
@@ -302,14 +300,12 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 		Slices.Paper_array = append(Slices.Paper_array, Paper)
    	}	
 
-   	rows, _, err = db.Query("select distinct paper.Title, paper.URL, people.name, paper.tag from favorite, paper, writtenby, people where favorite.User = '%s' and favorite.Title = paper.title and paper.id = writtenby.paper and writtenby.PERSON = people.ID", admin_name)
+   	rows, _, err = db.Query("select paper.Title, paper.URL from favorite, paper where favorite.User = '%s' and favorite.Title = paper.title", admin_name)
    	print("\nfav rows length:",len(rows))
    	for _, row := range rows {
 		Paper := Paper{}
 		Paper.Title = row.Str(0)
 		Paper.URL = row.Str(1)
-		Paper.Author = row.Str(2)	
-		Paper.Tag = row.Str(3)
 		Slices.Paper_array_2 = append(Slices.Paper_array_2, Paper)
    	}	
 
@@ -358,7 +354,7 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 			original = search_text
 			search_text = strings.Replace(search_text, "'", "%"+"\\"+"'%", -1)
 		}
-		rows, _, err := db.Query("select Distinct TITLE, URL, people.name, paper.tag from paper, writtenby, people where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
+		rows, _, err := db.Query("select TITLE, URL from paper, writtenby where paper.ID = writtenby.paper and writtenby.PERSON = (select ID from people where Name = '%s')", search_text)
 
 		if err != nil {
 			log.Println(err)
@@ -373,15 +369,13 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 		for _, row := range rows {
 			Paper := Paper{}
 			Paper.Title = row.Str(0)
-			Paper.URL = row.Str(1)	
-			Paper.Author = row.Str(2)	
-			Paper.Tag = row.Str(3)	
+			Paper.URL = row.Str(1)		
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
    		}	
 
 	}else if search_option == "2" && keyword_option == "1"{
 		text := "%"+search_text+ "%"
-		rows, _, err := db.Query("select Distinct TITLE, URL, people.name, paper.tag from paper, writtenby, people where TITLE like '%s' and  paper.id = writtenby.paper and writtenby.PERSON = people.ID",text)
+		rows, _, err := db.Query("select TITLE, URL from paper where TITLE like '%s'",text)
 		
 
 		if err != nil {
@@ -396,8 +390,6 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 			Paper := Paper{}
 			Paper.Title = row.Str(0)
 			Paper.URL = row.Str(1)	
-			Paper.Author = row.Str(2)	
-			Paper.Tag = row.Str(3)
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
    		}	
    		log.Println("array length: ",len(Slice.Paper_array))
@@ -407,7 +399,7 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
    			return
    		}
 	}else if search_option == "2" && keyword_option == "2"{
-		rows, _, err := db.Query("select distinct TITLE, URL, people.name, paper.tag from paper, people, writtenby where tag = '%s' and paper.id = writtenby.paper and writtenby.PERSON = people.ID",search_text)
+		rows, _, err := db.Query("select TITLE, URL from paper where tag = '%s'",search_text)
 		if err != nil {
 			log.Println(err)
 			OutputJson(w, 0, "Query execution failed", nil)
@@ -420,8 +412,6 @@ func (this *ajaxController) SearchAction(w http.ResponseWriter, r *http.Request)
 			Paper := Paper{}
 			Paper.Title = row.Str(0)
 			Paper.URL = row.Str(1)	
-			Paper.Author = row.Str(2)	
-			Paper.Tag = row.Str(3)
 			Slice.Paper_array = append(Slice.Paper_array, Paper)
 			count += 1
 			if count >= 100{
