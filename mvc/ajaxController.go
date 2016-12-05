@@ -282,7 +282,7 @@ func (this *ajaxController) GetFavAndRecAction(w http.ResponseWriter, r *http.Re
 	}
 	admin_name := U.Name
 	log.Println(admin_name)
-	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL from paper,favorite,writtenby,people where paper.title not in favorite.title and favorite.User = '%s' and favorite.Title = paper.title and paper.id = writtenby.paper and writtenby.PERSON = people.ID and paper.tag in (select tag from paper where paper.Title = favorite.Title)",admin_name)
+	rows, _, err := db.Query("select DISTINCT paper.title, paper.URL, people.name, paper.tag from paper, writtenby, favorite, people where paper.id = writtenby.paper and writtenby.PERSON = people.ID and people.name in ( select name from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID ) and paper.tag in ( select tag from people, paper, writtenby, favorite where favorite.User = '%s' and favorite.Title = paper.Title and paper.id = writtenby.paper and writtenby.PERSON = people.ID)",admin_name, admin_name)
 	print("rec rows length:",len(rows))
 	var Slices PaperSlices
 
